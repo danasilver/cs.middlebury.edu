@@ -1,0 +1,9 @@
+#!/bin/sh
+
+ltblue='\033[1;34m'
+nocolor='\033[0m'
+
+echo "${ltblue}Deploying to cs.middlebury.edu${nocolor}"
+
+ssh dsilver@basin.cs.middlebury.edu "cd public_html &&
+git pull origin master"
