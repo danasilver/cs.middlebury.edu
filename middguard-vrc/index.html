@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width">
+  <meta name="description" content="Dana Silver is a Computer Science major at Middlebury College and a software engineer.">
+  <title>MiddGuard: Automatic Memory Management</title>
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.0.0/styles/default.min.css">
+  <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1><a href="#">MiddGuard</a></h1>
+      <h3>Automatic Memory Management</h3>
+    </header>
+    <article>
+      <section>
+        <h4>MiddGuard</h4>
+        <p>
+          MiddGuard is a web-based visual analytics framework designed for
+          customizable, collaborative investigations. It is meant for both
+          developers and investigators.
+        </p>
+        <p>
+          MiddGuard was originally developed at Middlebury College after the
+          VAST 2014 challenge and was used successfully in the VAST 2015
+          challenge. The framework loads customizable data models and
+          and data views. Its power comes from keeping data in sync between
+          investigators' browsers and providing developers easy and efficient
+          access to data for visualizations by maintaining a client-side data
+          cache.
+        </p>
+
+        <figure>
+          <a href="vast-mc2-2014.png">
+            <img src="vast-mc2-2014.png" class="img-responsive">
+          </a>
+          <figcaption>
+            Screenshot of the investigative tool created for the VAST 2014
+            challenge that inspired MiddGuard.
+          </figcaption>
+        </figure>
+      </section>
+
+      <section>
+        <h4>View Reference Counting</h4>
+        <p>
+          View Reference Counting (VRC) provides application level memory
+          management for MiddGuard. It maintains references to live instances of
+          view on requested data models, removing a reference when a view is
+          removed, and removing the data from the client when all referencing
+          views have been removed.
+        </p>
+        <p>
+          It follows this four step method:
+        </p>
+        <ol>
+          <li>Request data given the context of a view.</li>
+          <li>Add a reference on the data to the view that made the request.</li>
+          <li>Remove the reference when we remove the view.</li>
+          <li>Destroy data when no active views are using it.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h4>VRC API Overview</h4>
+        <p>
+          VRC modifies two <a href="http://backbonejs.org/">Backbone.js</a>
+          methods (<code>fetch</code> and <code>remove</code>) to provide
+          functionality. Full documentation will be released with MiddGuard.
+        </p>
+        <p>
+          A <code>fetch</code> method is added to the <code>Backbone.View</code>
+          prototype. Backbone's <code>Collection.fetch</code>, written as
+        </p>
+        <pre><code class="javascript">gpspoints.fetch({
+  data: {ride_id: id},
+  remove: false
+});</code></pre>
+        <p>becomes</p>
+        <pre><code class="javascript">this.fetch('gpspoints', {
+  data: {ride_id: id},
+  remove: false
+});</code></pre>
+        <p>
+          Adding a fetch method to the View prototype gives <code>fetch</code>
+          access to the view's unique identifier (<code>cid</code>) to add as a
+          reference on the fetched models. The first argument to
+          <code>View.prototype.fetch</code> is the name of the MiddGuard entity
+          to fetch. The rest are passed in as options to the actual
+          <code>collection.fetch</code> call. MiddGuard entities are stored in
+          a central cache to avoid duplication.
+        </p>
+        <p>
+          The <code>remove</code> method on the Backbone View prototype is also
+          modified to remove the corresponding view references from models in
+          MiddGuard's cache. The collections that a view uses are cached on
+          each view to speed up the search for items to remove. Collections a
+          view does not use can be skipped.
+        </p>
+        <p>
+          Views can take advantage of these methods by inheriting
+          <code>middguard.View</code> instead of the usual
+          <code>Backbone.View</code> and registering the view using either
+          <code>middguard.addModule(name, constructor)</code> to add a top-level
+          view or <code>middguard.addSubview(name, constructor)</code> to add a
+          subview. Views should dispose of any subviews they create.
+        </p>
+        <p>
+          If a view overrides <code>remove</code> (for example to dispose of
+          subviews, clean up svg elements that Backbone can't handle, etc.)
+          it must make the <code>super</code> call up the prototype chain. This
+          is
+        </p>
+        <pre><code class="javascript">middguard.View.prototype.call(this);</code></pre>
+        <p>rather than the usual</p>
+        <pre><code class="javascript">Backbone.View.prototype.call(this);</code></pre>
+      </section>
+
+      <section>
+        <h4>Profiling With Chrome DevTools</h4>
+        <p>
+          Taking heap snapshots before, during and after a view is displayed
+          shows that memory has been reclaimed.
+        </p>
+        <figure>
+          <a href="devtools-snapshot.png">
+            <img src="devtools-snapshot.png" class="img-responsive">
+          </a>
+          <figcaption>
+            Snapshot 1 was taken before a view was inserted into MiddGuard and
+            data was requested. Snapshot 2 was taken while the view was active.
+            Snapshot 3 was taken after the view was removed and the data had
+            been removed from the browser.
+          </figcaption>
+        </figure>
+      </section>
+
+      <section>
+        <h4>Additional Materials</h4>
+        <p>
+          <a href="MiddGuard-VRC.pdf">Senior Seminar Final Presentation Slides</a>:
+          Presented on December 8, 2015 in Middlebury College, MBH 104
+        </p>
+      </section>
+
+    </article>
+    <footer>
+      <p>&copy; 2015 Dana Silver</p>
+    </footer>
+  </div>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.0.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</body>
+</html>

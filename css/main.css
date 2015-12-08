@@ -18,6 +18,11 @@ article {
   font-family: Georgia;
 }
 
+code {
+  background-color: #f5f5f5;
+  color: inherit;
+}
+
 article.resume p {
   margin: 0 0 5px;
 }
@@ -31,4 +36,8 @@ section {
 .subsection {
   margin-top: 20px;
   margin-bottom: 10px;
+}
+
+.hljs {
+  background-color: inherit;
 }
