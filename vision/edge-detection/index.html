@@ -91,7 +91,7 @@
               <a href="dana-s5-mh-1.png">
                 <img src="dana-s5-mh-1.png">
               </a>
-              <imgcaption>Marr-Hildreth with theshold 1.</imgcaption>
+              <imgcaption>Marr-Hildreth with threshold 1.</imgcaption>
             </figure>
           </div>
           <div class="col-sm-4">
@@ -99,7 +99,7 @@
               <a href="dana-s5-mh-2.png">
                 <img src="dana-s5-mh-2.png">
               </a>
-              <imgcaption>Marr-Hildreth with theshold 2.</imgcaption>
+              <imgcaption>Marr-Hildreth with threshold 2.</imgcaption>
             </figure>
           </div>
           <div class="col-sm-4">
@@ -107,7 +107,7 @@
               <a href="dana-s5-mh-4.png">
                 <img src="dana-s5-mh-4.png">
               </a>
-              <imgcaption>Marr-Hildreth with theshold 4.</imgcaption>
+              <imgcaption>Marr-Hildreth with threshold 4.</imgcaption>
             </figure>
           </div>
         </div>
@@ -120,9 +120,17 @@
           to the result. The Canny edge detector is much better at discerning
           true edges by considering the gradient of each pixel and whether it
           is a local maximum. Its hysteresis allows weak edges to connect strong
-          edges that might not otherwise be connected. Marr-Hildreth illustrates
-          what it looks like when even the real edges are not completely
-          connected.
+          edges that might not otherwise be connected. In each of the Canny
+          results, edges connect to outline an object in the original
+          image. Marr-Hildreth illustrates what it looks like when even the real
+          edges are not completely connected. Few points are connected to each
+          other with any level threshold.
+        </p>
+        <p>
+          Increasing the threshold with Marr-Hildreth does not have as positive
+          an effect as in the Canny images. Details of the image are lost along
+          with the noise. Again, this has to do with Canny's consideration of
+          weak edges that fall between the low and high thresholds.
         </p>
       </section>
     </article>
