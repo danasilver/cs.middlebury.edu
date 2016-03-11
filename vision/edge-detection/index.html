@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width">
+  <meta name="description" content="Dana Silver is a Computer Science major at Middlebury College and a software engineer.">
+  <title>Pinhole Camera</title>
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <style>
+  header p a {
+    font-size: 14px;
+    color: inherit;
+  }
+  header a:hover {
+    color: inherit;
+  }
+  img {
+    max-width: 100%;
+    margin: 20px 0 10px 0;
+  }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1><a href="#">Edge Detection</a></h1>
+      <p><a href="http://www.cs.middlebury.edu/~dsilver/">Dana Silver</a></p>
+      <p>Computer Vision</p>
+    </header>
+    <article>
+      <section>
+        <p>
+      </section>
+      <section>
+        <h4>Canny Edge Detection</h4>
+        <p>
+          <a href="https://en.wikipedia.org/wiki/Canny_edge_detector">
+            Canny edge detection</a>
+          applied with various low and high thresholds. The original image was
+          smoothed with a Gaussian kernel where &sigma; = 5.
+        <div class="row">
+          <div class="col-sm-4">
+            <figure>
+              <a href="dana-gray.png">
+                <img src="dana-gray.png">
+              </a>
+              <figcaption>Original image before smoothing.</figcaption>
+            </figure>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4">
+            <figure>
+              <a href="dana-s5-canny-0-1.png">
+                <img src="dana-s5-canny-0-1.png">
+              </a>
+              <imgcaption>Canny with low 0, high 1.</imgcaption>
+            </figure>
+          </div>
+          <div class="col-sm-4">
+            <figure>
+              <a href="dana-s5-canny-1-3.png">
+                <img src="dana-s5-canny-1-3.png">
+              </a>
+              <imgcaption>Canny with low 1, high 3.</imgcaption>
+            </figure>
+          </div>
+          <div class="col-sm-4">
+            <figure>
+              <a href="dana-s5-canny-2-4.png">
+                <img src="dana-s5-canny-2-4.png">
+              </a>
+              <imgcaption>Canny with low 2, high 4.</imgcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+      <section>
+        <h4>Marr-Hildreth Edge Detection</h4>
+        <p>
+          <a href="https://en.wikipedia.org/wiki/Marr%E2%80%93Hildreth_algorithm">
+            Marr-Hildreth edge detection</a>
+          applied to the same image. Again, the image was smoothed with a
+          Gaussian kernel where &sigma; = 5.
+        </p>
+        <div class="row">
+          <div class="col-sm-4">
+            <figure>
+              <a href="dana-s5-mh-1.png">
+                <img src="dana-s5-mh-1.png">
+              </a>
+              <imgcaption>Marr-Hildreth with theshold 1.</imgcaption>
+            </figure>
+          </div>
+          <div class="col-sm-4">
+            <figure>
+              <a href="dana-s5-mh-2.png">
+                <img src="dana-s5-mh-2.png">
+              </a>
+              <imgcaption>Marr-Hildreth with theshold 2.</imgcaption>
+            </figure>
+          </div>
+          <div class="col-sm-4">
+            <figure>
+              <a href="dana-s5-mh-4.png">
+                <img src="dana-s5-mh-4.png">
+              </a>
+              <imgcaption>Marr-Hildreth with theshold 4.</imgcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+      <section>
+        <h4>Conclusion</h4>
+        <p>
+          While the Marr-Hildreth edge detector can pick up many discrete pixels
+          in the image, many of these are false edges, and just contribute noise
+          to the result. The Canny edge detector is much better at discerning
+          true edges by considering the gradient of each pixel and whether it
+          is a local maximum. Its hysteresis allows weak edges to connect strong
+          edges that might not otherwise be connected. Marr-Hildreth illustrates
+          what it looks like when even the real edges are not completely
+          connected.
+        </p>
+      </section>
+    </article>
+  </div>
+</body>
+</html>
