@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width">
+  <meta name="description" content="Dana Silver is a Computer Science major at Middlebury College and a software engineer.">
+  <title>Hough Transform</title>
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <style>
+  header p a {
+    font-size: 14px;
+    color: inherit;
+  }
+  header a:hover {
+    color: inherit;
+  }
+  img {
+    max-width: 100%;
+    margin: 20px 0 10px 0;
+  }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1><a href="#">Hough Transform</a></h1>
+      <p><a href="http://www.cs.middlebury.edu/~dsilver/">Dana Silver</a></p>
+      <p>Computer Vision</p>
+    </header>
+    <article>
+      <section>
+        <p>I improved on the basic Hough circle transform by adding detection
+          support for a range of radii. This is implemented in a 3D pixel array
+          where each layer in the third dimension represents one of the radii
+          in the range from <code>minradius</code> to <code>maxradius</code>.
+        </p>
+      </section>
+      <section>
+        <h4>Different Sized Circles</h4>
+        <p>
+          A basic test of the multiple radii detector. The edge detector does
+          not pick up some of the lighter circles, but four circles of
+          different sizes are properly detected and circled. The smallest one
+          is too small for the 10px minimum radius.
+        </p>
+        <div class="row">
+          <div class="col-sm-6">
+            <figure>
+              <a href="multicolored.png">
+                <img src="multicolored.png">
+              </a>
+              <imgcaption>An image with multiple circles of different radii.
+              The image has been converted to grayscale.</imgcaption>
+            </figure>
+          </div>
+          <div class="col-sm-6">
+            <figure>
+              <a href="multicolored-circle-2-5-10-450-10-50.png">
+                <img src="multicolored-circle-2-5-10-450-10-50.png">
+              </a>
+              <imgcaption>Gaussian smoothing: &sigma; = 2.<br>
+                Canny: lo = 5, high = 10.<br>
+                Hough: radii 10 to 50px, minvotes = 450.
+              </imgcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+      <section>
+        <h4>Old Chapel</h4>
+        <p>First, application of the multiple radii detector over a single
+          radius to make sure I could still find and circle the clock.</p>
+        <p>Increasing the range of radii (from only 20 to 18-25) produces a few
+          false positives (circles at the right location, wrong radius)
+          in addition to the one correct circle. It may be useful to expand the
+          search for a local maxima to more than the cube surrounding a single
+          pixel.</p>
+        <div class="row">
+          <div class="col-sm-6">
+            <figure>
+              <a href="oldchapel.png">
+                <img src="oldchapel.png">
+              </a>
+              <imgcaption>The grayscale image of Old Chapel. A noticable circle
+              is the clock.</imgcaption>
+            </figure>
+          </div>
+          <div class="col-sm-6">
+            <figure>
+              <a href="circle-test-oc-20-20.png">
+                <img src="circle-test-oc-20-20.png">
+              </a>
+              <imgcaption>Gaussian smoothing: &sigma; = 1.<br>
+                Canny: lo = 5, high = 10.<br>
+                Hough: radii 20 to 20px, minvotes = 300.
+              </imgcaption>
+            </figure>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <figure>
+              <a href="circle-test-oc-18-25.png">
+                <img src="circle-test-oc-18-25.png">
+              </a>
+              <imgcaption>Gaussian smoothing: &sigma; = 1.<br>
+                Canny: lo = 5, high = 10.<br>
+                Hough: radii 18 to 25px, minvotes = 345.
+              </imgcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+      <section>
+        <h4>Latte</h4>
+        <p>Taking the grayscale image, there are four probable circles to look
+          for. Two for the edge of the cup and two for the edge of the plate.
+        </p>
+        <p>The in the first attempt, the upper bound on the radii seems okay,
+          the Hough transform finds the larger circles that make up the plate.
+          The smaller coffee cup isn't captured exactly, however.
+        </p>
+        <p>The two subsequent image expand the radii to 50-75px, which allows
+          the cup to be captured nicely by a smaller circle. The last image
+          raises the minvotes variable to remove some noise from multiple
+          inner circles. Both of these have higher minvotes than the first
+          transformed image, so one of the two outer circles (plate) disappears.
+        </p>
+        <div class="row">
+          <div class="col-sm-3">
+            <figure>
+              <a href="coffee.png">
+                <img src="coffee.png">
+              </a>
+              <imgcaption>Grayscale latte.</imgcaption>
+            </figure>
+          </div>
+          <div class="col-sm-3">
+            <figure>
+              <a href="coffee-900-60-75.png">
+                <img src="coffee-900-60-75.png">
+              </a>
+              <imgcaption>Gaussian: &sigma; = 2.<br>
+                Canny: lo = 5, high = 10.<br>
+                Hough: radii 60 to 75px, minvotes = 900.
+              </imgcaption>
+            </figure>
+          </div>
+          <div class="col-sm-3">
+            <figure>
+              <a href="coffee-1000-50-75.png">
+                <img src="coffee-1000-50-75.png">
+              </a>
+              <imgcaption>Gaussian: &sigma; = 2.<br>
+                Canny: lo = 5, high = 10.<br>
+                Hough: radii 50 to 75px, minvotes = 1000.
+              </imgcaption>
+            </figure>
+          </div>
+          <div class="col-sm-3">
+            <figure>
+              <a href="coffee-1500-50-75.png">
+                <img src="coffee-1050-50-75.png">
+              </a>
+              <imgcaption>Gaussian: &sigma; = 2.<br>
+                Canny: lo = 5, high = 10.<br>
+                Hough: radii 50 to 75px, minvotes = 1050.
+              </imgcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+      <section>
+        <h4>Twitter</h4>
+        <p>The Twitter logo is
+          <a href="http://designshack.net/articles/graphics/twitters-new-logo-the-geometry-and-evolution-of-our-favorite-bird/">famously composed of intersecting circles</a>. Let's
+          see if we can detect a few.
+        </p>
+        <p>In the first run circles are correctly detected at three different
+          sizes in three different locations, however the head circle doesn't
+          quite fit. Changing the radii range to 60-65 in the second run fits
+          the head perfectly and eliminates a few false positive circles that
+          were detected with the lower minvotes variable in the first run.
+        </p>
+        <div class="row">
+          <div class="col-sm-4">
+            <figure>
+              <a href="twitter.png">
+                <img src="twitter.png">
+              </a>
+              <imgcaption>Grayscale Twitter logo.</imgcaption>
+            </figure>
+          </div>
+          <div class="col-sm-4">
+            <figure>
+              <a href="twitter-280-50-60.png">
+                <img src="twitter-280-50-60.png">
+              </a>
+              <imgcaption>Gaussian: &sigma; = 3.<br>
+                Canny: lo = 5, high = 10.<br>
+                Hough: radii 50 to 60px, minvotes = 280.
+              </imgcaption>
+            </figure>
+          </div>
+          <div class="col-sm-4">
+            <figure>
+              <a href="twitter-350-60-65.png">
+                <img src="twitter-350-60-65.png">
+              </a>
+              <imgcaption>Gaussian: &sigma; = 3.<br>
+                Canny: lo = 5, high = 10.<br>
+                Hough: radii 60 to 65px, minvotes = 350.
+              </imgcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+    </article>
+  </div>
+</body>
+</html>
