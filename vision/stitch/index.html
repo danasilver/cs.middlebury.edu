@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width">
+  <meta name="description" content="Dana Silver is a Computer Science major at Middlebury College and a software engineer.">
+  <title>Image Stitching</title>
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <style>
+  header p {
+    margin: 2px 0;
+  }
+  header p a {
+    font-size: 14px;
+    color: inherit;
+  }
+  header a:hover {
+    color: inherit;
+  }
+  img {
+    max-width: 100%;
+    margin: 20px 0 10px 0;
+  }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1><a href="#">Image Stitching</a></h1>
+      <p><a href="http://www.cs.middlebury.edu/~dsilver/">Dana Silver</a></p>
+      <p>Shannon Ovitt</p>
+      <p>Computer Vision</p>
+    </header>
+    <article>
+      <section>
+        <h4>Battell</h4>
+        <p>The Battell images were taken from different degrees of rotation and
+          slightly different angles. The small difference in angle worked well
+          with the affine transformation used by our stitcher. The two Battell
+          images stay within the 6 degrees of freedom allowed by the affine
+          transform. The images only differ in x and y translation and rotation.
+          The change in angle isn't noticable between the images.
+        </p>
+        <div class="row">
+          <div class="col-sm-6">
+            <figure>
+              <a href="battell1.jpg">
+                <img src="battell1.jpg">
+              </a>
+            </figure>
+          </div>
+          <div class="col-sm-6">
+            <figure>
+              <a href="battell2.jpg">
+                <img src="battell2.jpg">
+              </a>
+            </figure>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <figure>
+              <a href="battell-over-affine.jpg">
+                <img src="battell-over-affine.jpg">
+              </a>
+            </figure>
+          </div>
+        </div>
+      </section>
+      <section>
+        <h4>Bookshelf</h4>
+        <p>The two bookshelf images were taken from different angles. The change
+          in perspective made it difficult for the matcher to find matches (it
+          could only find 3) and for the affine transform to properly stitch
+          one image onto the other. It needed more than the 6 degrees of freedom
+          allowed by an affine transform. In an affine transform parallel lines
+          must stay parallel. While the bottom left corner looks properly
+          aligned, the right edge needs to skew so pixels are placed farther
+          apart higher up the image. This would violate parallel lines staying
+          parallel.</p>
+        <div class="row">
+          <div class="col-sm-6">
+            <figure>
+              <a href="books1.jpg">
+                <img src="books1.jpg">
+              </a>
+            </figure>
+          </div>
+          <div class="col-sm-6">
+            <figure>
+              <a href="books2.jpg">
+                <img src="books2.jpg">
+              </a>
+            </figure>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <figure>
+              <a href="books-over-affine.jpg">
+                <img src="books-over-affine.jpg">
+              </a>
+            </figure>
+          </div>
+        </div>
+      </section>
+    </article>
+  </div>
+</body>
+</html>
