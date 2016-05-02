@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width">
+  <meta name="description" content="Dana Silver is a Computer Science major at Middlebury College and a software engineer.">
+  <title>Feature Tracking</title>
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../../css/main.css">
+  <style>
+  header p {
+    margin: 2px 0;
+  }
+  header p a {
+    font-size: 14px;
+    color: inherit;
+  }
+  header a:hover {
+    color: inherit;
+  }
+  figure {
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1><a href="#">Feature Tracking</a></h1>
+      <p><a href="https://tpeterw.github.io">Peter Wang</a></p>
+      <p><a href="http://www.cs.middlebury.edu/~dsilver/">Dana Silver</a></p>
+      <p>Computer Vision</p>
+    </header>
+    <article>
+      <section>
+        <h4>Features</h4>
+        <p>Back to <a href="..">Feature Tracking</a>.</p>
+        <div class="features"></div>
+      </section>
+  </div>
+<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script>
+var featureNames = d3.range(19).map(function(n) {
+  n = n.toString();
+  if (n.length < 2) n = '0' + n;
+  return 'features' + n + '.jpg';
+});
+
+var features = d3.select('.features').selectAll('figure')
+    .data(featureNames)
+  .enter()
+    .append('figure');
+
+features.append('a')
+    .attr('href', function(d) { return d; })
+  .append('img')
+    .attr('src', function(d) { return d; });
+
+features.append('figcaption')
+  .text(function(d, i) { return 'Features #' + i; });
+</script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width">
+  <meta name="description" content="Dana Silver is a Computer Science major at Middlebury College and a software engineer.">
+  <title>Feature Tracking</title>
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <style>
+  header p {
+    margin: 2px 0;
+  }
+  header p a {
+    font-size: 14px;
+    color: inherit;
+  }
+  header a:hover {
+    color: inherit;
+  }
+  img {
+    max-width: 100%;
+    margin: 20px 0 10px 0;
+  }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1><a href="#">Feature Tracking</a></h1>
+      <p><a href="https://tpeterw.github.io">Peter Wang</a></p>
+      <p><a href="http://www.cs.middlebury.edu/~dsilver/">Dana Silver</a></p>
+      <p>Computer Vision</p>
+    </header>
+    <article>
+      <section>
+        <h4>Features</h4>
+        <p><code>track</code> run with 100 as the maximum number of features to
+          track and no affine consistency check.</p>
+        <p>Individual feature images are available
+          <a href="features">here</a>.</p>
+        <div class="row">
+          <div class="col-sm-4">
+            <figure>
+              <a href="features.gif">
+                <img src="features.gif">
+              </a>
+              <figcaption>Features detected in each image.</figcaption>
+            </figure>
+          </div>
+          <div class="col-sm-4">
+            <figure>
+              <a href="features/features00.jpg">
+                <img src="features/features00.jpg">
+              </a>
+              <figcaption>Features detected in the first image.</figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+      <section>
+        <h4>3D-Viewing of Recovered Shape (Applet)</h4>
+        <p>May not work depending on browser settings.</p>
+        <applet code="ThreeD.class" width="600" height="450">
+          <param name="model" value="rack.obj">
+        </applet>
+      </section>
+
+      <section>
+        <h4>3D-Viewing of Recovered Shape (Sketchfab)</h4>
+        <iframe width="640" height="480"
+                src="https://sketchfab.com/models/a9b56c1c019e43e088ab5450dd1bdbe0/embed"
+                frameborder="0" allowfullscreen mozallowfullscreen="true"
+                webkitallowfullscreen="true" onmousewheel=""></iframe>
+      </section>
+    </article>
+  </div>
+</body>
+</html>
