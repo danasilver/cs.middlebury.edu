@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width">
+  <meta name="description" content="Dana Silver is a Computer Science major at Middlebury College and a software engineer.">
+  <title>Seam Carving</title>
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <style>
+  header p {
+    margin: 2px 0;
+  }
+  header p a {
+    font-size: 14px;
+    color: inherit;
+  }
+  header a:hover {
+    color: inherit;
+  }
+  img {
+    max-width: 100%;
+    margin: 20px 0 10px 0;
+  }
+  h5 {
+    font-size: 16px;
+    margin-top: 20px;
+  }
+  .row {
+    margin-bottom: 10px;
+  }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1><a href="#">Seam Carving</a></h1>
+      <h4>CS453 Computer Vision Final Project</h4>
+      <p><a href="http://www.cs.middlebury.edu/~dsilver/">Dana Silver</a></p>
+      <p>Shannon Ovitt</p>
+    </header>
+    <article>
+      <section>
+        <h4>Goals and Summary</h4>
+        <p>
+          Our goal was to implement a functional version of seam carving as
+          described in the
+          <a href="http://www.faculty.idc.ac.il/arik/SCWeb/imret/imret.pdf">paper</a>
+          by Avidan and Shamir. Our implementation is able to retarget images to
+          a smaller size both horizontally and verically.
+        </p>
+        <p>
+          We approached the problem as described in the paper, by calculating
+          an energy function over the image, then using a dynamic programming
+          procedure to calculate the cumulative minimum energies either
+          vertically or horizontally. We backtrack through this array of
+          cumulative minimum energies produced by the dynamic programming
+          algorithm to find the seam of minimum energy that we remove from the
+          image.
+        </p>
+        <p>
+          Since the size and energy of the image has changed after each seam
+          removal, we recalculate energy, the paths of minimum energy, and the
+          seam to remove after each seam removal operation in either direction.
+        </p>
+      </section>
+
+      <section>
+        <h4>Implementation</h4>
+
+        <h5>Usage</h5>
+
+        <p>
+          Our implementation supports content aware image reduction. There are
+          two modes, one of which is interactive and resizes based on a mouse
+          click in the image. The non-interactive mode takes two input values,
+          the width and height to resize to. The interactive mode opens the
+          image in a window and allow the user to click on the image to
+          determine the dimensions to resize the image to.
+        </p>
+
+        <p>
+          Both modes animate the seam removal, drawing each seam before
+          removing it and then drawing the final image. Any key can be pressed
+          to close the window containing the final image.
+        </p>
+
+        <p>Non-interactive:</p>
+
+        <pre><code>$ python seamcarve.py image_name width height</code></pre>
+
+        <p>Interactive:</p>
+
+        <pre><code>$ python seamcarve.py image_name --interactive</code></pre>
+
+        <p>
+          All code and images are available on GitHub at
+          <a href="https://github.com/danasilver/seam-carving">
+            danasilver/seam-carving</a>.
+        </p>
+
+        <h5>Energy function</h5>
+
+        <p>
+          We start processing the image to calculate the energy function by
+          applying a Gaussian filter with a 3 by 3 kernel and standard deviation
+          of 0 to blur the image and reduce noise. We convert the image to
+          to greyscale before using Sobel filters to compute the image gradients
+          in x and y directions from the blurred image.
+        </p>
+
+        <div class="row">
+          <div class="col-sm-4">
+            <figure>
+              <a href="beach/beach.jpg">
+                <img src="beach/beach.jpg">
+              </a>
+              <figcaption>
+                Original image, <i>beach</i>, used by Avidan and
+                Shamir.
+              </figcaption>
+            </figure>
+          </div>
+          <div class="col-sm-4">
+            <figure>
+              <a href="beach/beachgauss.jpg">
+                <img src="beach/beachgauss.jpg">
+              </a>
+              <figcaption>
+                The <i>beach</i> image after a Gaussian filter with a 3 by 3
+                kernel has been applied.
+              </figcaption>
+            </figure>
+          </div>
+          <div class="col-sm-4">
+            <figure>
+              <a href="beach/beachgray.jpg">
+                <img src="beach/beachgray.jpg">
+              </a>
+              <figcaption>
+                The <i>beach</i> image after being blurred and converted to
+                grayscale.
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-4 col-sm-offset-4">
+            <figure>
+              <img src="energy.png" width="200px">
+              <figcaption>
+                The energy function, where <i>I</i> is the image.
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <p>
+          Each Sobel filter convolved weighted 3x3
+          kernels to approximate the x and y gradients. As Sobel filters are
+          discrete differentiation operators, the x gradient and y gradient are
+          calculated separately. The gradients from the Sobel filters produces
+          images with higher intensity values along edges within the image by
+          taking the image's derivative. We take the absolute value of the
+          derivatives in the <i>x</i> and <i>y</i> directions and sum them
+          to get the final energy function.
+        </p>
+
+        <div class="row">
+          <div class="col-sm-4">
+            <figure>
+              <a href="beach/beachdx.jpg">
+                <img src="beach/beachdx.jpg">
+              </a>
+              <figcaption>
+                The gradient of <i>beach</i> in the x direction after a Guassian
+                filter was applied the the result was converted to grayscale.
+              </figcaption>
+            </figure>
+          </div>
+          <div class="col-sm-4">
+            <figure>
+              <a href="beach/beachdy.jpg">
+                <img src="beach/beachdy.jpg">
+              </a>
+              <figcaption>
+                The gradient of <i>beach</i> in the y direction after a Guassian
+                filter was applied the the result was converted to grayscale.
+              </figcaption>
+            </figure>
+          </div>
+          <div class="col-sm-4">
+            <figure>
+              <a href="beach/beachenergy.jpg">
+                <img src="beach/beachenergy.jpg">
+              </a>
+              <figcaption>
+                An image representation of the energy function,
+                <i>e<sub>1</sub></i> on <i>beach</i>.
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <h5>Seam Calculation with Dynamic Programming</h5>
+
+        <p>
+          We use a dynamic programming procedure to compute the cumulative
+          energies in the <i>x</i> and <i>y</i> directions. To remove a column
+          of pixels and make the image one fewer pixels wide, we start in the
+          second row, and iterate through the pixels from left to right. In each
+          cell of our cumulative energies table we record the sum of the energy
+          at that pixel and the minimum of the three 8-connected pixels above.
+        </p>
+
+        <div class="row">
+          <div class="col-sm-12">
+            <figure>
+              <img src="dynamicprogramming/relation.png">
+              <figcaption>
+                The recurrence relation for our dynamic programming function.
+                <i>M</i> is the two dimensional array of cumulative energies
+                we are building up. <i>e</i> is the precomputed energy function
+                as given above.
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-4">
+            <figure>
+              <a href="dynamicprogramming/DynamicProgrammingLeastEnergyPathA.png">
+                <img src="dynamicprogramming/DynamicProgrammingLeastEnergyPathA.png">
+              </a>
+              <figcaption>
+                Using dynamic programming to compute the second row of the
+                cumulative energies.
+              </figcaption>
+            </figure>
+          </div>
+          <div class="col-sm-4">
+            <figure>
+              <a href="dynamicprogramming/DynamicProgrammingLeastEnergyPathB.png">
+                <img src="dynamicprogramming/DynamicProgrammingLeastEnergyPathB.png">
+              </a>
+              <figcaption>
+                Using dynamic programming to fill out the rest of energy values.
+              </figcaption>
+            </figure>
+          </div>
+          <div class="col-sm-4">
+            <figure>
+              <a href="dynamicprogramming/DynamicProgrammingLeastEnergyPathC.png">
+                <img src="dynamicprogramming/DynamicProgrammingLeastEnergyPathC.png">
+              </a>
+              <figcaption>
+                Backtracking through the energies table to find the path that
+                minimizes energy.
+                <br>
+                <i>Source:
+                  <a href="https://en.wikipedia.org/wiki/Seam_carving">Wikipedia</a>
+                </i>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <p>
+          The backtracking step, seen in the third diagram above, starts in the
+          last row of cumulative energies computed with dynamic programming
+          and selects the pixel with the minimum value. From that pixel the
+          backtracking algorithm works up the image row by row selecting the
+          pixel from the three 8-connected pixels above the previous one with
+          the minimum value. This is the pixel that produced the path of
+          minimum energy.
+        </p>
+
+        <p>
+          The result of this backtracking is vertical path from the top to
+          bottom of the image with one pixel selected for the seam in each row.
+          When remove the pixels on the seam the image is exactly one pixel
+          less in the x direction. The algorithm works similarly to find a
+          horizontal seam and remove pixels in the y direction. Instead of
+          choosing between the minimum of the three pixels to the top, the
+          algorithm chooses between the three to the left as it moves across
+          columns of the image.
+        </p>
+      </section>
+
+      <section>
+        <h4>Results</h4>
+
+        <h5>Beach</h5>
+
+        <p>
+          The <i>beach</i> image, as seen above performs well when seam carved.
+          The background, mainly blue ocean and gray sand creates a low energy
+          background, so the seam finding algorithm is easily able to
+          differentiate between the foreground (girl and bird) and the
+          background. As seen in the seam carving animation, few cuts pass
+          through the foreground in either direction.
+        </p>
+
+        <div class="row">
+          <div class="col-sm-6">
+            <figure>
+              <a href="beach/beachanimated.gif">
+                <img src="beach/beachanimated.gif">
+              </a>
+              <figcaption>
+                Animation of seam carving the <i>beach</i> image. We draw each frame
+                with the seam that is about to be removed. The resized image
+                is 200px by 200px.
+              </figcaption>
+            </figure>
+          </div>
+          <div class="col-sm-6">
+            <figure>
+              <a href="beach/beach-200-200.jpg">
+                <img src="beach/beach-200-200.jpg">
+              </a>
+              <figcaption>
+                The result of seam carving the <i>beach</i> beach image to
+                200px by 200px.
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <h5>Giro</h5>
+
+        <p>
+          The <i>giro</i> image poses a challenge to seam carve since it has
+          a high energy background. The energy function, seen below, has a hard
+          time differentiating between the foreground and background in some
+          areas, particularly the left arm (on the right of the image) of the
+          rider in pink. The area between his arm and the background is
+          calculated as low-energy, and in the retargted image below his arm
+          is cut off. We only resized this image width-wise since the rider
+          in pink takes up almost the entire image height-wise.
+        </p>
+
+        <div class="row">
+          <div class="col-sm-6">
+            <figure>
+              <a href="giro/giro.jpg">
+                <img src="giro/giro.jpg">
+              </a>
+              <figcaption>
+                One of our own images, <i>giro</i>. This is the original image
+                before any energy calculations or retargeting.
+              </figcaption>
+            </figure>
+          </div>
+          <div class="col-sm-6">
+            <figure>
+              <a href="giro/giroenergy.jpg">
+                <img src="giro/giroenergy.jpg">
+              </a>
+              <figcaption>
+                The calculated energy function of the <i>giro</i> image.
+                This image has a high energy background, which will cause issues
+                retargeting.
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-12">
+            <figure>
+              <a href="giro/giro-500-440.jpg">
+                <img src="giro/giro-500-440.jpg">
+              </a>
+              <figcaption>
+                The result of seam carving the <i>giro</i> image to 500 px by
+                440 px.
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h4>References</h4>
+
+        <ul>
+          <li>
+            <a href="http://www.faculty.idc.ac.il/arik/SCWeb/imret/">
+              Seam Carving for Content-Aware Image Resizing
+            </a>
+            (Project Page)
+          </li>
+          <li>
+            Shai Avidan and Ariel Shamir. 2007. Seam carving for content-aware image resizing. In ACM SIGGRAPH 2007 papers (SIGGRAPH '07). ACM, New York, NY, USA, Article 10. DOI=http://dx.doi.org/10.1145/1275808.1276390
+          </li>
+          <li>
+            <a href="https://en.wikipedia.org/wiki/Seam_carving">
+              Wikipedia, Seam carving
+            </a>
+          </li>
+        </ul>
+    </article>
+  </div>
+</body>
+</html>
