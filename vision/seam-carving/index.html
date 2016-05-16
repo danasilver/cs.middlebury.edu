@@ -382,6 +382,44 @@
             </figure>
           </div>
         </div>
+
+        <h5>Balloon</h5>
+
+        <p>
+          Like in the <i>beach</i> image, retargeting the <i>balloon</i> image
+          does a good job avoiding the high energy seams that separate the
+          foreground from the background. Only a few seams pass through the
+          red balloon. The algorithm performs so well here because of the
+          largely similar, low energy background. There is a striking difference
+          between the background and foreground which creates high energy
+          regions that the seam carving avoids.
+        </p>
+
+        <div class="row">
+          <div class="col-sm-6">
+            <figure>
+              <a href="balloon/balloon.jpg">
+                <img src="balloon/balloon.jpg">
+              </a>
+              <figcaption>
+                Another of our own images, <i>balloon</i>. This is the original image
+                before any energy calculations or retargeting.
+              </figcaption>
+            </figure>
+          </div>
+          <div class="col-sm-6">
+            <figure>
+              <a href="balloon/balloon-200-200.jpg">
+                <img src="balloon/balloon-200-200.jpg">
+              </a>
+              <figcaption>
+                <i>balloon</i>, retargeted to 200 px by 200px. The seam carving
+                algorithm does a good job removing the low energy background
+                and preserving the balloons and flags in the foreground.
+              </figcaption>
+            </figure>
+          </div>
+        </div>
       </section>
 
       <section>
